@@ -75,6 +75,7 @@ type Run struct {
 	HeadSha        string `json:"head_sha"`
 	URL            string `json:"html_url"`
 	HeadRepository Repo   `json:"head_repository"`
+	DisplayTitle   string `json:"display_title"`
 }
 
 func (r *Run) StartedTime() time.Time {
@@ -94,6 +95,21 @@ func (r *Run) Duration(now time.Time) time.Duration {
 		return 0
 	}
 	return d.Round(time.Second)
+}
+
+func (r *Run) GetWorkflowID() int64 {
+	return r.WorkflowID
+}
+
+func (r *Run) GetWorkflowName(client *api.Client, repo ghrepo.Interface, opts *FilterOptions, limit int, workflowID int64) string {
+	var runs []Run
+	var err error
+	runs, err = GetRunsByWorkflow(client, repo, opts, limit, workflowID)
+
+	if err != nil {
+		return ""
+	}
+	return runs[0].Name
 }
 
 type Repo struct {

@@ -127,8 +127,9 @@ func listRun(opts *ListOptions) error {
 
 	if tp.IsTTY() {
 		tp.AddField("STATUS", nil, nil)
-		tp.AddField("NAME", nil, nil)
+		tp.AddField("DISPLAY_TITLE", nil, nil)
 		tp.AddField("WORKFLOW", nil, nil)
+		tp.AddField("COMMIT_HASH", nil, nil)
 		tp.AddField("BRANCH", nil, nil)
 		tp.AddField("EVENT", nil, nil)
 		tp.AddField("ID", nil, nil)
@@ -146,9 +147,9 @@ func listRun(opts *ListOptions) error {
 			tp.AddField(string(run.Conclusion), nil, nil)
 		}
 
-		tp.AddField(run.CommitMsg(), nil, cs.Bold)
-
-		tp.AddField(run.Name, nil, nil)
+		tp.AddField(run.DisplayTitle, nil, cs.Bold)
+		tp.AddField(run.GetWorkflowName(client, baseRepo, filters, opts.Limit, run.GetWorkflowID()), nil, nil)
+		tp.AddField(run.HeadSha, nil, nil)
 		tp.AddField(run.HeadBranch, nil, cs.Bold)
 		tp.AddField(string(run.Event), nil, nil)
 		tp.AddField(fmt.Sprintf("%d", run.ID), nil, cs.Cyan)
